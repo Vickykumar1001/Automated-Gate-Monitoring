@@ -27,22 +27,19 @@ const UploadForm = () => {
     formData.append("gateNo", gateNo);
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/v1/home/uploads",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch("http://localhost:8080/api/v1/upload", {
+        method: "POST",
+        body: formData,
+      });
 
       if (response.ok) {
         const data = await response.json();
-        if (data.flag === "green") {
-          window.location.assign("http://localhost:3001/successful");
+        if (data.flag === "clear") {
+          window.location.assign("http://localhost:3000/successful");
         } else if (data.flag === "suspicious") {
-          window.location.assign("http://localhost:3001/suspicious");
-        } else if (data.flag === "not_registered") {
-          window.location.assign("http://localhost:3001/notregistered");
+          window.location.assign("http://localhost:3000/suspicious");
+        } else if (data.flag === "notRegistered") {
+          window.location.assign("http://localhost:3000/notregistered");
         }
         // Optionally, you can redirect or perform other actions here
       } else {

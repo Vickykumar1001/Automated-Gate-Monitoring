@@ -16,8 +16,8 @@ cloudinary.config({
 const connectDB = require("./db/connect");
 
 // product router
-const homeRouter = require("./routes/homeRoutes");
-
+const uploadRouter = require("./routes/uploadRoutes");
+const detailRouter = require("./routes/detailRoutes");
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -28,15 +28,16 @@ app.use(express.json());
 app.use(fileUpload({ useTempFiles: true }));
 
 app.get("/", (req, res) => {
-  res.send("<h1>Vehicle Data</h1>");
+  res.send("<h1>Automated Check Gate Monitoring System</h1>");
 });
 
-app.use("/api/v1/home", homeRouter);
+app.use("/api/v1/upload", uploadRouter);
+app.use("/api/v1/detail", detailRouter);
 // middleware
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 const start = async () => {
   try {

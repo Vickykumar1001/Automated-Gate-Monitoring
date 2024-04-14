@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const sarathiSchema = new mongoose.Schema({
-  licenceNumber: {
+  licenseNumber: {
     type: String,
     required: true,
   },
@@ -21,7 +21,7 @@ const sarathiSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  licenceHolder: {
+  licenseHolder: {
     name: {
       type: String,
       required: true,

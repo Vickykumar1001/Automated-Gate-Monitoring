@@ -1,40 +1,22 @@
+const fs = require("fs");
 const path = require("path");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const cloudinary = require("cloudinary").v2;
-const fs = require("fs");
 const Vahan = require("../models/vahanModel");
 const VehicleEntryExit = require("../models/vehicleEntryExitModel");
-const SuspiciousVehicle = require("../models/sucpiciousModel");
+const SuspiciousVehicle = require("../models/suspiciousVehicleModel");
 
-// Controller function to fetch vehicle data from Vahan database
-const getVehicleData = async (req, res) => {
-  const { vehicleNumber } = req.params;
-  console.log(vehicleNumber);
-  // Find the vehicle data in the database by registration number
-  const vehicleData = await Vahan.findOne({
-    registrationNumber: vehicleNumber,
-  });
-
-  // Check if vehicle data exists
-  if (!vehicleData) {
-    return res.status(404).json({ error: "Vehicle data not found" });
-  }
-
-  // Send the vehicle data as a response
-  res.status(200).json(vehicleData);
-};
 const uploadImage = async (req, res) => {
   const { gateNo } = req.body;
   const result = await cloudinary.uploader.upload(
     req.files.image.tempFilePath,
     {
       use_filename: true,
-      folder: "file-upload",
+      folder: "vehicle-database",
     }
   );
   fs.unlinkSync(req.files.image.tempFilePath);
-
   const postData = {
     url: result.secure_url,
   };
@@ -50,17 +32,19 @@ const uploadImage = async (req, res) => {
   const vehicle = await Vahan.findOne({ registrationNumber: data.number });
   if (!vehicle) {
     return res.status(StatusCodes.OK).json({
-      flag: "not_registered",
-      statement: "Vehicle Not Registered in Vahan Database..!!",
+      flag: "notRegistered",
+      statement: "Vehicle data not found in Vahan database..!!",
     });
   }
   const suspiciousVehicle = await SuspiciousVehicle.findOne({
-    registration_number: data.number,
+    registrationNumber: data.number,
   });
   if (suspiciousVehicle) {
-    return res
-      .status(StatusCodes.OK)
-      .json({ flag: "suspicious", statement: "Vehicle is found Suspicious!" });
+    return res.status(StatusCodes.OK).json({
+      flag: "suspicious",
+      statement: "Vehicle is found Suspicious!",
+      data: suspiciousVehicle,
+    });
   }
   let entryExit = "";
   if (gateNo == "1" || gateNo == "2") {
@@ -69,23 +53,21 @@ const uploadImage = async (req, res) => {
     entryExit = "Exit";
   }
   const newVisitedVehicle = {
-    checkInTime: new Date(),
-    registrationNumber: data.number,
-    checkGateNo: 1,
     vehicleNumber: data.number,
     vehicleTime: new Date(),
     entryExit: entryExit,
+    vehicleType: vehicle.vehicleType,
     gateNo: gateNo,
+    imgURL: result.secure_url,
   };
   await VehicleEntryExit.create(newVisitedVehicle);
   return res.status(StatusCodes.OK).json({
-    flag: "green",
-    statement:
-      "Vehicle Data found on Vahan Database and Entry of vehicle is done.",
+    flag: "clear",
+    statement: "Vehicle Number Verified and entry of vehicle is done.",
+    data: vehicle,
   });
 };
 
 module.exports = {
   uploadImage,
-  getVehicleData,
 };

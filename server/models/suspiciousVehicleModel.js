@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Define the schema for the simplified suspicious vehicle
+// Schema for the suspicious vehicle
 const SuspiciousSchema = new Schema({
-  registration_number: { type: String, required: true },
+  registrationNumber: { type: String, required: true },
   crimes: [
     {
       type: { type: String, required: true },
