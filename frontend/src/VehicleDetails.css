@@ -1,0 +1,49 @@
+.vehicle-details {
+  background-color: #f0fff4; /* A light green shade */
+  width: 80%;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-family: "Arial", sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #2a8834; /* A richer, darker green */
+}
+
+.scan-button {
+  padding: 10px 20px;
+  background-color: #4caf50; /* A vibrant green */
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  padding: 20px;
+}
+
+.detail {
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.detail strong {
+  color: #2a6496;
+  margin-right: 5px;
+}
